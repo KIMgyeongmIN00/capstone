@@ -7,11 +7,25 @@ import LocationSelecter from "./location-select";
 import MaintenanceCostCard from "./maintenance-cost-card";
 import { addMonthAndFormat } from "@/modules/main-pannel/maintenace-cost-card/add-month-and-format";
 import { useState } from "react";
+import { userMaintenanceValueStore } from "@/store/user-maintenance-value-store";
 
 const MainPannel = () => {
   const [cardNumbers, setCardNumbers] = useState<number>(0);
   const { startDate, setStartDate, endDate, setEndDate, monthsDiff } =
     useMonthRangePicker();
+
+  const gasValueMap = userMaintenanceValueStore(
+    (state) => state.monthlyGasValue
+  );
+  const electricityValueMap = userMaintenanceValueStore(
+    (state) => state.monthlyElectricityValue
+  );
+
+  function test() {
+    console.log(Array.from(gasValueMap.entries()));
+    console.log(electricityValueMap);
+  }
+
   return (
     <div className="flex max-w-[1440px] flex-col border-2 rounded-lg my-4 mx-auto p-4">
       <div className="flex flex-col gap-y-2">
@@ -47,6 +61,7 @@ const MainPannel = () => {
             />
           ))}
       </div>
+      <button onClick={test}>테스트</button>
     </div>
   );
 };
