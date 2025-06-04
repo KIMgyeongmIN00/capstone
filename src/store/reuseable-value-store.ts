@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type reuseableValueStore = {
+export type ReuseableValueStore = {
   startMonth: Date | null;
   setStartMonth: (month: Date | null) => void;
   monthDiff: number;
@@ -20,7 +20,7 @@ type reuseableValueStore = {
   setEndMonthNum: (month: number) => void;
 };
 
-export const reuseableValueStore = create<reuseableValueStore>()(
+export const reuseableValueStore = create<ReuseableValueStore>()(
   persist(
     (set, get) => ({
       //supabase 데이터 가져올 시작점
@@ -71,3 +71,18 @@ export const reuseableValueStore = create<reuseableValueStore>()(
     }
   )
 );
+
+if (typeof window !== "undefined") {
+  window.addEventListener("beforeunload", () => {
+    reuseableValueStore.setState({
+      startMonth: null,
+      monthDiff: 0,
+      isGasChecked: false,
+      isElectricityChecked: false,
+      startYear: 0,
+      startMonthNum: 0,
+      endYear: 0,
+      endMonthNum: 0,
+    });
+  });
+}

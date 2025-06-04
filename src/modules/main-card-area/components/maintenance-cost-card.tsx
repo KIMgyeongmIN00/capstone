@@ -1,6 +1,5 @@
 import { reuseableValueStore } from "@/store/reuseable-value-store";
 import { userMaintenanceValueStore } from "@/store/user-maintenance-value-store";
-import { useEffect, useState } from "react";
 
 type MaintenanceCostCardProps = {
   CardDate: string | undefined;
@@ -18,17 +17,13 @@ const MaintenanceCostCard = ({ CardDate, index }: MaintenanceCostCardProps) => {
     (state) => state.setElectricityValue
   );
 
-  const [electricCost, setElectricCost] = useState<number>(0);
-  const [gasCost, setGasCost] = useState<number>(0);
-
-  // 상태 반영
-  useEffect(() => {
-    setElectricityValue(index, Number(electricCost));
-  }, [electricCost]);
-
-  useEffect(() => {
-    setGasValue(index, Number(gasCost));
-  }, [gasCost]);
+  // store에서 직접 값 읽기
+  const electricCost = userMaintenanceValueStore(
+    (state) => state.monthlyElectricityValue.get(index) ?? 0
+  );
+  const gasCost = userMaintenanceValueStore(
+    (state) => state.monthlyGasValue.get(index) ?? 0
+  );
 
   return (
     <div className="flex flex-col border border-gray-400 rounded-md px-4 py-3 hover:scale-105 shadow-sm transition-transform">
@@ -50,7 +45,7 @@ const MaintenanceCostCard = ({ CardDate, index }: MaintenanceCostCardProps) => {
                   const cleaned = raw
                     .replace(/[^0-9]/g, "")
                     .replace(/^0+(?=\d)/, "");
-                  setElectricCost(cleaned === "" ? 0 : Number(cleaned));
+                  setElectricityValue(index, cleaned === "" ? 0 : Number(cleaned));
                 }}
               />
               <span className="ml-1 text-sm text-gray-600">원</span>
@@ -71,7 +66,7 @@ const MaintenanceCostCard = ({ CardDate, index }: MaintenanceCostCardProps) => {
                   const cleaned = raw
                     .replace(/[^0-9]/g, "")
                     .replace(/^0+(?=\d)/, "");
-                  setGasCost(cleaned === "" ? 0 : Number(cleaned));
+                  setGasValue(index, cleaned === "" ? 0 : Number(cleaned));
                 }}
               />
               <span className="ml-1 text-sm text-gray-600">원</span>
