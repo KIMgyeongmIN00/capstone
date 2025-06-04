@@ -18,6 +18,8 @@ export type ReuseableValueStore = {
   setEndYear: (year: number) => void;
   endMonthNum: number;
   setEndMonthNum: (month: number) => void;
+  isCardGenerated: boolean;
+  setIsCardGenerated: (v: boolean) => void;
 };
 
 export const reuseableValueStore = create<ReuseableValueStore>()(
@@ -55,6 +57,8 @@ export const reuseableValueStore = create<ReuseableValueStore>()(
       setEndYear: (year: number) => set({ endYear: year }),
       endMonthNum: 0,
       setEndMonthNum: (month: number) => set({ endMonthNum: month }),
+      isCardGenerated: false,
+      setIsCardGenerated: (v: boolean) => set({ isCardGenerated: v }),
     }),
     {
       name: "reuseable-value-store",
@@ -67,6 +71,7 @@ export const reuseableValueStore = create<ReuseableValueStore>()(
         startMonthNum: state.startMonthNum,
         endYear: state.endYear,
         endMonthNum: state.endMonthNum,
+        isCardGenerated: state.isCardGenerated,
       }),
     }
   )
@@ -83,6 +88,7 @@ if (typeof window !== "undefined") {
       startMonthNum: 0,
       endYear: 0,
       endMonthNum: 0,
+      isCardGenerated: false,
     });
   });
 }

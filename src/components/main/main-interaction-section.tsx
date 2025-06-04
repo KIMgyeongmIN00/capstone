@@ -3,7 +3,6 @@
 import MainCardArea from "./main-card-area";
 import MainPannel from "./main-pannel";
 import MainNextButton from "./main-next-button";
-import { useState } from "react";
 import { reuseableValueStore } from "@/store/reuseable-value-store";
 import { differenceInMonths } from "date-fns";
 import { addMonthAndFormat } from "@/modules/main-card-area/util/add-month-and-format";
@@ -18,6 +17,7 @@ const HomeInteractionSection = () => {
   const setEndYear = reuseableValueStore((s) => s.setEndYear);
   const endMonth = reuseableValueStore((s) => s.endMonthNum);
   const setEndMonth = reuseableValueStore((s) => s.setEndMonthNum);
+  const isCardGenerated = reuseableValueStore((s) => s.isCardGenerated);
 
   // monthDiff 계산
   const startDate = new Date(startYear, startMonth - 1);
@@ -31,7 +31,6 @@ const HomeInteractionSection = () => {
     return addMonthAndFormat(startDate, i);
   };
 
-  const [disabled, setDisabled] = useState<boolean>(true);
   return (
     <div className="flex flex-col">
       <MainPannel
@@ -44,10 +43,10 @@ const HomeInteractionSection = () => {
         setEndYear={setEndYear}
         setEndMonth={setEndMonth}
         monthDiff={monthDiff}
-        setDisabled={setDisabled}
+        setDisabled={() => {}}
       />
       <MainCardArea addMonth={addMonth} />
-      <MainNextButton disabled={disabled} />
+      <MainNextButton disabled={!isCardGenerated} />
     </div>
   );
 };

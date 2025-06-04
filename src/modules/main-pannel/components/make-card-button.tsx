@@ -21,6 +21,7 @@ const MakeCardButton = ({
   );
 
   const setMonthDiffStore = reuseableValueStore((state) => state.setMonthDiff);
+  const setIsCardGenerated = reuseableValueStore((state) => state.setIsCardGenerated);
 
   return (
     <>
@@ -31,6 +32,7 @@ const MakeCardButton = ({
           setMonthDiffStore(monthsDiff || 0);
           initialMap(monthsDiff);
           setDisabled(false);
+          setIsCardGenerated(true);
         }}
         className={`bg-black rounded-lg  w-full max-w-3xl  text-white p-2 transition-colors ${
           monthsDiff === 0 || monthsDiff === -1
