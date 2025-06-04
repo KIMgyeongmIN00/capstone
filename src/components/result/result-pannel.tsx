@@ -3,10 +3,14 @@ import CitySelecter from "./city-select";
 import LocationSelecter from "./location-select";
 
 type ResultPannelProps = {
+  setSelectedRegion: Dispatch<SetStateAction<string>>;
   setSelectedCity: Dispatch<SetStateAction<string>>;
 };
 
-const ResultPannel = ({ setSelectedCity }: ResultPannelProps) => {
+const ResultPannel = ({
+  setSelectedRegion,
+  setSelectedCity,
+}: ResultPannelProps) => {
   return (
     <div className="flex flex-col">
       <div className="py-4 text-center">
@@ -18,7 +22,7 @@ const ResultPannel = ({ setSelectedCity }: ResultPannelProps) => {
           <div className="flex justify-center gap-6">
             <div className="flex place-items-center justify-center gap-2">
               <label className="text-xl">지역별</label>
-              <LocationSelecter />
+              <LocationSelecter setSelectedRegion={setSelectedRegion} />
             </div>
             <div className="flex place-items-center justify-center gap-2">
               <label className="text-xl">도시별</label>

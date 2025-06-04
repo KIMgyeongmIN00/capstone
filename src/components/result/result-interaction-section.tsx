@@ -30,14 +30,20 @@ const ResultInteractionSection = () => {
   if (isLoading)
     return (
       <div className="w-full h-[40dvh] my-4 rounded-lg">
-        <ResultPannel setSelectedCity={setSelectedCity} />
+        <ResultPannel
+          setSelectedRegion={setSelectedRegion}
+          setSelectedCity={setSelectedCity}
+        />
         <div className="h-2/3 mx-4 my-2 bg-gray-300 rounded-lg animate-pulse"></div>
       </div>
     );
   if (error)
     return (
       <div>
-        <ResultPannel setSelectedCity={setSelectedCity} />
+        <ResultPannel
+          setSelectedRegion={setSelectedRegion}
+          setSelectedCity={setSelectedCity}
+        />
         <p className="text-center text-4xl break-keep">
           차트 불러오기를 실패했습니다. 처음부터 다시 시도 해주세요
         </p>
@@ -53,7 +59,10 @@ const ResultInteractionSection = () => {
 
   return (
     <div>
-      <ResultPannel setSelectedCity={setSelectedCity} />
+      <ResultPannel
+        setSelectedRegion={setSelectedRegion}
+        setSelectedCity={setSelectedCity}
+      />
       {isFetching && (
         <p className="text-center text-sm text-gray-500 mb-2">
           새 데이터를 불러오는 중...
