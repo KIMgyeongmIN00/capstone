@@ -9,7 +9,7 @@ type BillsParams = {
 
 export const useBillsQuery = ({ region, city, start, count }: BillsParams) => {
   return useQuery({
-    queryKey: ["bills", region, city],
+    queryKey: ["bills", region, city, start],
     queryFn: async () => {
       const query = new URLSearchParams({
         region,

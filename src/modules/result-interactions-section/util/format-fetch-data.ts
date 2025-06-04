@@ -81,10 +81,14 @@ export const mergeEnergyData = (
     return aYear - bYear || aMonth - bMonth;
   });
 
+  const allowDates = transformedElectricity.map((e) => e.date);
+
   // 7. 클라이언트 데이터 추가 (Map 직접 사용)
-  return sortedArray.map((item, index) => ({
-    ...item,
-    clientGasValue: clientGasMap.get(index) ?? 0,
-    clientElectricityValue: clientElectricityMap.get(index) ?? 0,
-  }));
+  return sortedArray
+    .map((item, index) => ({
+      ...item,
+      clientGasValue: clientGasMap.get(index) ?? 0,
+      clientElectricityValue: clientElectricityMap.get(index) ?? 0,
+    }))
+    .filter((item) => allowDates.includes(item.date));
 };
