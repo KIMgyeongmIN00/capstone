@@ -1,16 +1,17 @@
-import { Dispatch, SetStateAction } from "react";
+// import { Dispatch, SetStateAction } from "react";
 
 type YearSelectProps = {
   selectType: string;
-  setYearFn: Dispatch<SetStateAction<number>>;
+  setYearFn: (year: number) => void;
 };
 
-const YearSelect = ({ selectType, setYearFn }: YearSelectProps) => {
+const YearSelect = ({ selectType, setYearFn, value }: YearSelectProps & { value: number }) => {
   return (
     <div className="flex place-items-center">
       <select
         id={`${selectType}`}
         name={`${selectType}`}
+        value={value}
         onChange={(e) => {
           setYearFn(Number(e.target.value));
         }}

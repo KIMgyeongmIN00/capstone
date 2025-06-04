@@ -1,16 +1,18 @@
-import { Dispatch, SetStateAction } from "react";
+// import { Dispatch, SetStateAction } from "react";
 
 type MonthSelectProps = {
   selectType: string;
-  setMonthFn: Dispatch<SetStateAction<number>>;
+  setMonthFn: (month: number) => void;
+  value: number;
 };
 
-const MonthSelect = ({ selectType, setMonthFn }: MonthSelectProps) => {
+const MonthSelect = ({ selectType, setMonthFn, value }: MonthSelectProps) => {
   return (
     <div className="flex place-items-center">
       <select
         id={`${selectType}`}
         name={`${selectType}`}
+        value={value}
         onChange={(e) => {
           setMonthFn(Number(e.target.value));
         }}

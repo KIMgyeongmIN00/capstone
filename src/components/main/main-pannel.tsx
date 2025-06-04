@@ -9,10 +9,12 @@ import MakeCardButton from "@/modules/main-pannel/components/make-card-button";
 type MainPannelProps = {
   startYear: number;
   startMonth: number;
-  setStartYear: Dispatch<SetStateAction<number>>;
-  setStartMonth: Dispatch<SetStateAction<number>>;
-  setEndYear: Dispatch<SetStateAction<number>>;
-  setEndMonth: Dispatch<SetStateAction<number>>;
+  endYear: number;
+  endMonth: number;
+  setStartYear: (year: number) => void;
+  setStartMonth: (month: number) => void;
+  setEndYear: (year: number) => void;
+  setEndMonth: (month: number) => void;
   monthDiff: number;
   setDisabled: Dispatch<SetStateAction<boolean>>;
 };
@@ -20,6 +22,8 @@ type MainPannelProps = {
 const MainPannel = ({
   startYear,
   startMonth,
+  endYear,
+  endMonth,
   setStartYear,
   setStartMonth,
   setEndYear,
@@ -37,13 +41,13 @@ const MainPannel = ({
         <h2 className="text-2xl">기간 선택</h2>
         <div className="flex flex-col sm:flex-row place-items-center justify-center gap-4">
           <div className="flex gap-4">
-            <YearSelect selectType="startYear" setYearFn={setStartYear} />
-            <MonthSelect selectType="startMonth" setMonthFn={setStartMonth} />
+            <YearSelect selectType="startYear" setYearFn={setStartYear} value={startYear} />
+            <MonthSelect selectType="startMonth" setMonthFn={setStartMonth} value={startMonth} />
           </div>
           <span className="text-lg font-bold">-</span>
           <div className="flex gap-4">
-            <YearSelect selectType="endYear" setYearFn={setEndYear} />
-            <MonthSelect selectType="endMonth" setMonthFn={setEndMonth} />
+            <YearSelect selectType="endYear" setYearFn={setEndYear} value={endYear} />
+            <MonthSelect selectType="endMonth" setMonthFn={setEndMonth} value={endMonth} />
           </div>
         </div>
         <span className="text-sm text-gray-400 text-center">

@@ -12,7 +12,7 @@ const MainNextButton = ({ disabled }: MainNextButtonType) => {
   const handleClick = () => {
     Swal.fire({
       title: "관리비 입력 다 하셨나요?",
-      text: "입력 내용이 저장되지 않습니다!",
+      text: "입력하신 내용으로 결과를 확인할 수 있습니다!",
       icon: "info",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
