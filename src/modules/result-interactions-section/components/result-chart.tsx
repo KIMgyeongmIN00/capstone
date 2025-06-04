@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { MergedEnergyData } from "../util/format-fetch-data";
 import { reuseableValueStore } from "@/store/reuseable-value-store";
+import { useWindowWidth } from "../hooks/use-window-width";
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
@@ -26,7 +27,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       case "clientGasValue":
         return "내 가스비";
       case "electricityFee":
-        return "전기세";
+        return "평균 전기세";
       case "clientElectricityValue":
         return "내 전기세";
       default:
@@ -60,6 +61,9 @@ const ResultsChart = ({ chartData }: ResultsChartProps) => {
     (state) => state.isElectricityChecked
   );
 
+  const width = useWindowWidth();
+  const xPadding = width < 640 ? 20 : width < 1024 ? 40 : 80;
+
   const handleMouseMove = (state: any) => {
     if (state?.activeTooltipIndex !== undefined) {
       setActiveIndex(state.activeTooltipIndex);
@@ -74,7 +78,7 @@ const ResultsChart = ({ chartData }: ResultsChartProps) => {
           onMouseMove={handleMouseMove}
           onMouseLeave={() => setActiveIndex(null)}
         >
-          <XAxis dataKey="date" padding={{ left: 100, right: 100 }} />
+          <XAxis dataKey="date" padding={{ left: xPadding, right: xPadding }} />
           <YAxis padding={{ top: 20, bottom: 20 }} />
           <Tooltip
             content={<CustomTooltip />}
