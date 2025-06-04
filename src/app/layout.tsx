@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import TQProvider from "@/providers/tq-provider";
 import "./globals.css";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -13,9 +14,6 @@ const pretendard = localFont({
 export const metadata: Metadata = {
   title: "체크인하우스",
   // description: "나중에 여기 프로젝트 설명 채우세요.",
-  // icons: {
-  //   icon: "images/퍼블릭폴더 내부 파일 이름",
-  // },
   // metadataBase: new URL("사이트 링크"),
   // openGraph: {
   //   title: "제목",
@@ -39,7 +37,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko-KR">
-      <body className={`${pretendard.variable} antialiased`}>{children}</body>
+      <body className={`${pretendard.variable} antialiased`}>
+        <TQProvider>{children}</TQProvider>
+      </body>
     </html>
   );
 }
