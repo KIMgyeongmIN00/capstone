@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -12,7 +14,7 @@ import { useState } from "react";
 import { MergedEnergyData } from "../util/format-fetch-data";
 import { reuseableValueStore } from "@/store/reuseable-value-store";
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
 
   const [yyyy, mm] = label.split(".").map(Number);
@@ -37,7 +39,7 @@ const CustomTooltip = ({ active, payload, label }) => {
       <p className="font-bold">
         {yyyy}년 {mm}월
       </p>
-      {payload.map((entry, index) => (
+      {payload.map((entry: any, index: any) => (
         <p key={index} style={{ color: entry.color }}>
           {getFormatName(entry.name)} : {entry.value}원
         </p>
@@ -58,7 +60,7 @@ const ResultsChart = ({ chartData }: ResultsChartProps) => {
     (state) => state.isElectricityChecked
   );
 
-  const handleMouseMove = (state) => {
+  const handleMouseMove = (state: any) => {
     if (state?.activeTooltipIndex !== undefined) {
       setActiveIndex(state.activeTooltipIndex);
     }
