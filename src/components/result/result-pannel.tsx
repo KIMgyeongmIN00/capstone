@@ -3,7 +3,8 @@
 import type { Dispatch, SetStateAction, FC } from "react";
 import CitySelecter from "./city-select";
 import LocationSelecter from "./location-select";
-import UtilityComparisonTable from "./utility-comparison-table";
+import ResultsChart from "@/modules/result-interactions-section/components/result-chart";
+import { mergeEnergyData } from "@/modules/result-interactions-section/util/format-fetch-data";
 
 interface BillData {
   month: string;
@@ -34,6 +35,31 @@ const ResultPannel: FC<ResultPannelProps> = ({
   userBills = DEFAULT_BILLS,
   averageBills = DEFAULT_BILLS
 }) => {
+  const transformToElectricityData = (bills: BillData[], city: string) => 
+    bills.map(bill => ({
+      자치구: city,
+      연도: bill.month,
+      사용료: bill.amount
+    }));
+
+  const transformToGasData = (bills: BillData[], city: string) =>
+    bills.map(bill => {
+      const [year, month] = bill.month.split('.');
+      return {
+        자치구: city,
+        연도: year,
+        월: `${parseInt(month)}월`,
+        사용요금: bill.amount
+      };
+    });
+
+  const chartData = userBills && averageBills ? mergeEnergyData(
+    transformToElectricityData(averageBills.electric, "강남구"),
+    transformToGasData(averageBills.gas, "강남구"),
+    new Map(userBills.electric.map((bill, index) => [index, bill.amount])),
+    new Map(userBills.gas.map((bill, index) => [index, bill.amount]))
+  ) : [];
+
   return (
     <div className="flex flex-col">
       <div className="py-4 text-center">
@@ -60,18 +86,7 @@ const ResultPannel: FC<ResultPannelProps> = ({
       
       <div className="mt-8">
         <h2 className="text-2xl mb-4 text-center">공과금 비교</h2>
-        <div className="space-y-6">
-          <UtilityComparisonTable
-            title="전기세"
-            userBills={userBills.electric}
-            averageBills={averageBills.electric}
-          />
-          <UtilityComparisonTable
-            title="가스비"
-            userBills={userBills.gas}
-            averageBills={averageBills.gas}
-          />
-        </div>
+        <ResultsChart chartData={chartData} />
       </div>
     </div>
   );
