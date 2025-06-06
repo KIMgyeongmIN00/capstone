@@ -1,16 +1,17 @@
 import { Dispatch, SetStateAction } from "react";
 import CitySelecter from "./city-select";
 import LocationSelecter from "./location-select";
+import ApartmentSelecter from "./apartment-select";
 
 type ResultPannelProps = {
   setSelectedRegion: Dispatch<SetStateAction<string>>;
   setSelectedCity: Dispatch<SetStateAction<string>>;
+  setSelectedApartment: Dispatch<SetStateAction<string>>;
+  selectedRegion: string;
+  selectedCity: string;
 };
 
-const ResultPannel = ({
-  setSelectedRegion,
-  setSelectedCity,
-}: ResultPannelProps) => {
+const ResultPannel = ({ setSelectedRegion, setSelectedCity, setSelectedApartment, selectedRegion, selectedCity }: ResultPannelProps) => {
   return (
     <div className="flex flex-col">
       <div className="py-4 text-center">
@@ -26,7 +27,11 @@ const ResultPannel = ({
             </div>
             <div className="flex place-items-center justify-center gap-2">
               <label className="text-xl">도시별</label>
-              <CitySelecter setSelectedCity={setSelectedCity} />
+              <CitySelecter setSelectedCity={setSelectedCity} region={selectedRegion} />
+            </div>
+            <div className="flex place-items-center justify-center gap-2">
+              <label className="text-xl">아파트</label>
+              <ApartmentSelecter setSelectedApartment={setSelectedApartment} region={selectedRegion} district={selectedCity} />
             </div>
           </div>
         </div>
