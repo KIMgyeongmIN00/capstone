@@ -1,15 +1,38 @@
-import { Dispatch, SetStateAction } from "react";
+'use client';
+
+import type { Dispatch, SetStateAction, FC } from "react";
 import CitySelecter from "./city-select";
 import LocationSelecter from "./location-select";
+import UtilityComparisonTable from "./utility-comparison-table";
 
-type ResultPannelProps = {
+interface ResultPannelProps {
   setSelectedRegion: Dispatch<SetStateAction<string>>;
   setSelectedCity: Dispatch<SetStateAction<string>>;
-};
+  myUtilities?: {
+    electric: number;
+    gas: number;
+    total: number;
+  };
+  averageUtilities?: {
+    electric: number;
+    gas: number;
+    total: number;
+  };
+}
 
-const ResultPannel = ({
+const ResultPannel: FC<ResultPannelProps> = ({
   setSelectedRegion,
   setSelectedCity,
+  myUtilities = {
+    electric: 50000,
+    gas: 70000,
+    total: 120000
+  },
+  averageUtilities = {
+    electric: 45000,
+    gas: 65000,
+    total: 110000
+  }
 }: ResultPannelProps) => {
   return (
     <div className="flex flex-col">
@@ -33,6 +56,14 @@ const ResultPannel = ({
         <span className="text-sm text-gray-400 text-center">
           프로토타입 버전에서는 서울특별시만 지원합니다.
         </span>
+      </div>
+      
+      <div className="mt-8">
+        <h2 className="text-2xl mb-4 text-center">공과금 비교</h2>
+        <UtilityComparisonTable
+          myUtilities={myUtilities}
+          averageUtilities={averageUtilities}
+        />
       </div>
     </div>
   );
