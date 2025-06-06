@@ -4,16 +4,17 @@ import { mergeEnergyData } from "@/modules/result-interactions-section/util/form
 import { userMaintenanceValueStore } from "@/store/user-maintenance-value-store";
 import ResultsChart from "@/modules/result-interactions-section/components/result-chart";
 import ResultPannel from "./result-pannel";
+import UtilityComparisonTable from "./utility-comparison-table";
 import { useState } from "react";
 
 const ResultInteractionSection = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>("서울특별시");
   const [selectedCity, setSelectedCity] = useState<string>("강남구");
 
-  const gasMapVaules = userMaintenanceValueStore(
+  const gasMapValues = userMaintenanceValueStore(
     (state) => state.monthlyGasValue
   );
-  const electricMapVaules = userMaintenanceValueStore(
+  const electricMapValues = userMaintenanceValueStore(
     (state) => state.monthlyElectricityValue
   );
 
@@ -53,9 +54,28 @@ const ResultInteractionSection = () => {
   const chartData = mergeEnergyData(
     data.electricity,
     data.gas,
-    electricMapVaules,
-    gasMapVaules
+    electricMapValues,
+    gasMapValues
   );
+
+  const formatBillData = (bills: any[], userValuesMap: Map<number, number>) => {
+    return bills.map((bill: any, index: number) => ({
+      month: bill.month,
+      amount: userValuesMap.get(index) || 0,
+    }));
+  };
+
+  const formatAverageBillData = (bills: any[]) => {
+    return bills.map((bill: any) => ({
+      month: bill.month,
+      amount: bill.average || 0,
+    }));
+  };
+
+  const userElectricBills = formatBillData(data.electricity, electricMapValues);
+  const userGasBills = formatBillData(data.gas, gasMapValues);
+  const averageElectricBills = formatAverageBillData(data.electricity);
+  const averageGasBills = formatAverageBillData(data.gas);
 
   return (
     <div>
@@ -68,7 +88,22 @@ const ResultInteractionSection = () => {
           새 데이터를 불러오는 중...
         </p>
       )}
-      <ResultsChart chartData={chartData} />
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-6 text-center">공과금 비교</h2>
+        <ResultsChart chartData={chartData} />
+        <div className="mt-8">
+          <UtilityComparisonTable
+            title="전기세"
+            userBills={userElectricBills}
+            averageBills={averageElectricBills}
+          />
+          <UtilityComparisonTable
+            title="가스비"
+            userBills={userGasBills}
+            averageBills={averageGasBills}
+          />
+        </div>
+      </div>
     </div>
   );
 };
