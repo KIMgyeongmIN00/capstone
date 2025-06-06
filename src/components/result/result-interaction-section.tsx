@@ -58,19 +58,37 @@ const ResultInteractionSection = () => {
     gasMapValues
   );
 
-  const formatBillData = (bills: any[], userValuesMap: Map<number, number>) => {
+  const formatBillData = (bills: any[], valuesMap: Map<number, number>) => {
+    // Map 객체를 배열로 변환
+    const values = Array.from({ length: bills.length }, (_, i) => valuesMap.get(i) || 0);
+    
     return bills.map((bill: any, index: number) => ({
       month: bill.month,
-      amount: userValuesMap.get(index) || 0,
+      amount: values[index],
     }));
   };
 
   const formatAverageBillData = (bills: any[]) => {
+    if (!Array.isArray(bills)) return [];
+    
     return bills.map((bill: any) => ({
       month: bill.month,
       amount: bill.average || 0,
     }));
   };
+
+  // 데이터가 없는 경우 빈 배열 반환
+  if (!data?.electricity || !data?.gas) {
+    return (
+      <div>
+        <ResultPannel
+          setSelectedRegion={setSelectedRegion}
+          setSelectedCity={setSelectedCity}
+        />
+        <p className="text-center text-gray-500 mt-4">데이터를 불러오는 중...</p>
+      </div>
+    );
+  }
 
   const userElectricBills = formatBillData(data.electricity, electricMapValues);
   const userGasBills = formatBillData(data.gas, gasMapValues);

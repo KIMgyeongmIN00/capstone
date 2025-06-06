@@ -18,6 +18,15 @@ const UtilityComparisonTable: FC<UtilityComparisonTableProps> = ({
   userBills = [],
   averageBills = [],
 }: UtilityComparisonTableProps) => {
+  if (!Array.isArray(userBills) || !Array.isArray(averageBills)) {
+    return (
+      <div className="w-full overflow-x-auto mb-8">
+        <h3 className="text-xl font-semibold mb-4">{title}</h3>
+        <p className="text-center text-gray-500">데이터를 불러오는 중...</p>
+      </div>
+    );
+  }
+
   const getDifference = (my: number, avg: number) => {
     const diff = my - avg;
     return {
@@ -28,21 +37,12 @@ const UtilityComparisonTable: FC<UtilityComparisonTableProps> = ({
   };
 
   const calculateTotal = (bills: BillData[]) => {
-    if (!Array.isArray(bills)) return 0;
+    if (!bills?.length) return 0;
     return bills.reduce((sum, bill) => sum + (bill?.amount || 0), 0);
   };
 
   const userTotal = calculateTotal(userBills);
   const avgTotal = calculateTotal(averageBills);
-
-  if (!Array.isArray(userBills) || !Array.isArray(averageBills)) {
-    return (
-      <div className="w-full overflow-x-auto mb-8">
-        <h3 className="text-xl font-semibold mb-4">{title}</h3>
-        <p className="text-center text-gray-500">데이터를 불러오는 중...</p>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full overflow-x-auto mb-8">
@@ -58,20 +58,20 @@ const UtilityComparisonTable: FC<UtilityComparisonTableProps> = ({
         </thead>
         <tbody className="divide-y divide-gray-200 bg-white">
           {userBills.map((bill, index) => {
-            const avgBill = averageBills[index];
+            const avgBill = averageBills[index] || { amount: 0 };
             return (
-              <tr key={bill.month}>
+              <tr key={bill.month || index}>
                 <td className="px-6 py-4 text-sm text-gray-900">{bill.month}</td>
                 <td className="px-6 py-4 text-right text-sm text-gray-900">
-                  {bill.amount.toLocaleString()}원
+                  {(bill?.amount || 0).toLocaleString()}원
                 </td>
                 <td className="px-6 py-4 text-right text-sm text-gray-900">
-                  {avgBill?.amount.toLocaleString()}원
+                  {(avgBill?.amount || 0).toLocaleString()}원
                 </td>
                 <td className="px-6 py-4 text-right text-sm">
-                  <span className={getDifference(bill.amount, avgBill?.amount || 0).color}>
-                    {`${getDifference(bill.amount, avgBill?.amount || 0).value.toLocaleString()}원 (${
-                      getDifference(bill.amount, avgBill?.amount || 0).type
+                  <span className={getDifference(bill?.amount || 0, avgBill?.amount || 0).color}>
+                    {`${getDifference(bill?.amount || 0, avgBill?.amount || 0).value.toLocaleString()}원 (${
+                      getDifference(bill?.amount || 0, avgBill?.amount || 0).type
                     })`}
                   </span>
                 </td>
