@@ -83,11 +83,6 @@ const ResultPannel: FC<ResultPannelProps> = ({
           프로토타입 버전에서는 서울특별시만 지원합니다.
         </span>
       </div>
-      
-      <div className="mt-8">
-        <h2 className="text-2xl mb-4 text-center">공과금 비교</h2>
-        <ResultsChart chartData={chartData} />
-      </div>
     </div>
   );
 };
