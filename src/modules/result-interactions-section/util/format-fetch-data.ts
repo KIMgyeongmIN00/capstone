@@ -87,8 +87,10 @@ export const mergeEnergyData = (
   return sortedArray
     .map((item, index) => ({
       ...item,
-      clientGasValue: clientGasMap.get(index) ?? 0,
-      clientElectricityValue: clientElectricityMap.get(index) ?? 0,
+      electricityFee: Math.round(item.electricityFee),
+      gasFee: Math.round(item.gasFee),
+      clientGasValue: Math.round(clientGasMap.get(index) ?? 0),
+      clientElectricityValue: Math.round(clientElectricityMap.get(index) ?? 0),
     }))
     .filter((item) => allowDates.includes(item.date));
 };

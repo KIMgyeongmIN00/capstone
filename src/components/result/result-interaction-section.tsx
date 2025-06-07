@@ -105,15 +105,6 @@ const ResultInteractionSection = () => {
     }));
   };
 
-  const formatAverageBillData = (bills: Bill[]) => {
-    if (!Array.isArray(bills)) return [];
-    
-    return bills.map((bill: Bill) => ({
-      month: bill.month,
-      amount: bill.average || 0,
-    }));
-  };
-
   // 데이터가 없는 경우 빈 배열 반환
   if (!data?.electricity || !data?.gas) {
     return (
@@ -133,8 +124,8 @@ const ResultInteractionSection = () => {
 
   const userElectricBills = formatBillData(data.electricity, electricMapValues);
   const userGasBills = formatBillData(data.gas, gasMapValues);
-  const averageElectricBills = formatAverageBillData(data.electricity);
-  const averageGasBills = formatAverageBillData(data.gas);
+  const averageElectricBills = chartData.map(item => ({ month: item.date, amount: item.electricityFee }));
+  const averageGasBills = chartData.map(item => ({ month: item.date, amount: item.gasFee }));
 
   return (
     <div>
