@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
   const electRes = await supabase.rpc("get_electricity_bills", {
     region_input: region,
     city_input: city,
-    // apartment_input: apartment,
+    apartment_input: apartment,
     month_list: electMonths,
   });
 
