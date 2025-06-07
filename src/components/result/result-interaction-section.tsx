@@ -1,3 +1,5 @@
+'use client';
+
 import { useBillsQuery } from "@/modules/result-interactions-section/hooks/use-bill-query";
 import { reuseableValueStore } from "@/store/reuseable-value-store";
 import { mergeEnergyData } from "@/modules/result-interactions-section/util/format-fetch-data";
@@ -6,6 +8,12 @@ import ResultsChart from "@/modules/result-interactions-section/components/resul
 import ResultPannel from "./result-pannel";
 import UtilityComparisonTable from "./utility-comparison-table";
 import { useState } from "react";
+
+interface Bill {
+  month: string;
+  amount: number;
+  average?: number;
+}
 
 const ResultInteractionSection = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>("서울특별시");
@@ -58,20 +66,20 @@ const ResultInteractionSection = () => {
     gasMapValues
   );
 
-  const formatBillData = (bills: any[], valuesMap: Map<number, number>) => {
+  const formatBillData = (bills: Bill[], valuesMap: Map<number, number>) => {
     // Map 객체를 배열로 변환
     const values = Array.from({ length: bills.length }, (_, i) => valuesMap.get(i) || 0);
     
-    return bills.map((bill: any, index: number) => ({
+    return bills.map((bill: Bill, index: number) => ({
       month: bill.month,
       amount: values[index],
     }));
   };
 
-  const formatAverageBillData = (bills: any[]) => {
+  const formatAverageBillData = (bills: Bill[]) => {
     if (!Array.isArray(bills)) return [];
     
-    return bills.map((bill: any) => ({
+    return bills.map((bill: Bill) => ({
       month: bill.month,
       amount: bill.average || 0,
     }));
