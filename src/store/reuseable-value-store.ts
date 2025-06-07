@@ -26,36 +26,36 @@ export const reuseableValueStore = create<ReuseableValueStore>()(
   persist(
     (set, get) => ({
       //supabase 데이터 가져올 시작점
-      startMonth: null,
+      startMonth: new Date(2022, 0, 1), // 2022년 1월 1일로 초기화
       setStartMonth: (month: Date | null) => {
         set({ startMonth: month });
       },
 
       //supabase 데이터 가져올 갯수
-      monthDiff: 0,
+      monthDiff: 3, // 3개월치 데이터로 초기화
       setMonthDiff: (diff: number) => {
         set({ monthDiff: diff });
       },
 
-      isGasChecked: false,
+      isGasChecked: true,
       toggleGasCheck: () => {
         const current = get().isGasChecked;
         set({ isGasChecked: !current });
       },
 
-      isElectricityChecked: false,
+      isElectricityChecked: true,
       toggleElectricityCheck: () => {
         const current = get().isElectricityChecked;
         set({ isElectricityChecked: !current });
       },
 
-      startYear: 0,
+      startYear: 2022,
       setStartYear: (year: number) => set({ startYear: year }),
-      startMonthNum: 0,
+      startMonthNum: 1,
       setStartMonthNum: (month: number) => set({ startMonthNum: month }),
-      endYear: 0,
+      endYear: 2022,
       setEndYear: (year: number) => set({ endYear: year }),
-      endMonthNum: 0,
+      endMonthNum: 3,
       setEndMonthNum: (month: number) => set({ endMonthNum: month }),
       isCardGenerated: false,
       setIsCardGenerated: (v: boolean) => set({ isCardGenerated: v }),
@@ -80,14 +80,14 @@ export const reuseableValueStore = create<ReuseableValueStore>()(
 if (typeof window !== "undefined") {
   window.addEventListener("beforeunload", () => {
     reuseableValueStore.setState({
-      startMonth: null,
-      monthDiff: 0,
-      isGasChecked: false,
-      isElectricityChecked: false,
-      startYear: 0,
-      startMonthNum: 0,
-      endYear: 0,
-      endMonthNum: 0,
+      startMonth: new Date(2022, 0, 1),
+      monthDiff: 3,
+      isGasChecked: true,
+      isElectricityChecked: true,
+      startYear: 2022,
+      startMonthNum: 1,
+      endYear: 2022,
+      endMonthNum: 3,
       isCardGenerated: false,
     });
   });

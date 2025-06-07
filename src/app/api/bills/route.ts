@@ -28,7 +28,7 @@ function generateGasDateInfo(start: Date, count: number) {
 
   for (let i = 0; i < count; i++) {
     years.add(`${year}`);
-    months.add(`${month}월`);
+    months.add(String(month).padStart(2, "0"));
     month++;
     if (month > 12) {
       month = 1;
@@ -54,6 +54,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const region = searchParams.get("region")!;
   const city = searchParams.get("city")!;
+  const apartment = searchParams.get("apartment") ?? null;
   const start = new Date(searchParams.get("start")!);
   const count = parseInt(searchParams.get("count")!, 10);
 
@@ -62,17 +63,27 @@ export async function GET(req: NextRequest) {
   const electRes = await supabase.rpc("get_electricity_bills", {
     region_input: region,
     city_input: city,
+    // apartment_input: apartment,
     month_list: electMonths,
   });
 
   // 가스비
   const { years, months } = generateGasDateInfo(start, count);
+
+  // 요청 파라미터 콘솔 출력
+  console.log("요청 파라미터:", { region, city, apartment, years, months });
+
   const gasRes = await supabase.rpc("get_gas_bills", {
     region_input: region,
     city_input: city,
+    apartment_input: apartment,
     year_list: years,
     month_list: months,
   });
+
+  // Supabase 응답 콘솔 출력
+  console.log("전기세 응답:", electRes);
+  console.log("가스비 응답:", gasRes);
 
   return Response.json({
     electricity: electRes.data ?? [],

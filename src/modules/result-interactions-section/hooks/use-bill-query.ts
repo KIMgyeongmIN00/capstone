@@ -5,11 +5,12 @@ type BillsParams = {
   city: string;
   start: Date;
   count: number;
+  apartment?: string;
 };
 
-export const useBillsQuery = ({ region, city, start, count }: BillsParams) => {
+export const useBillsQuery = ({ region, city, start, count, apartment }: BillsParams) => {
   return useQuery({
-    queryKey: ["bills", region, city, start?.toISOString?.() ?? start, count],
+    queryKey: ["bills", region, city, start?.toISOString?.() ?? start, count, apartment],
     queryFn: async () => {
       const query = new URLSearchParams({
         region,
@@ -17,6 +18,7 @@ export const useBillsQuery = ({ region, city, start, count }: BillsParams) => {
         start: start.toISOString(),
         count: count.toString(),
       });
+      if (apartment) query.append("apartment", apartment);
 
       const res = await fetch(`/api/bills?${query}`);
       if (!res.ok) throw new Error("데이터 요청 실패");

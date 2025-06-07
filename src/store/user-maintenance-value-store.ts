@@ -19,11 +19,20 @@ function arrayToMap(arr: [number, number][]) {
   return new Map(arr);
 }
 
+// 초기 데이터 생성
+const createInitialData = () => {
+  const map = new Map<number, number>();
+  map.set(0, 11111);
+  map.set(1, 22222);
+  map.set(2, 33333);
+  return map;
+};
+
 export const userMaintenanceValueStore = create<MaintenanceValueStore>()(
   persist(
     (set, get) => ({
-      monthlyGasValue: new Map(),
-      monthlyElectricityValue: new Map(),
+      monthlyGasValue: createInitialData(),
+      monthlyElectricityValue: createInitialData(),
 
       initValues: (n: number | null) => {
         if (n === null) return;
@@ -83,8 +92,8 @@ export const userMaintenanceValueStore = create<MaintenanceValueStore>()(
 if (typeof window !== "undefined") {
   window.addEventListener("beforeunload", () => {
     userMaintenanceValueStore.setState({
-      monthlyGasValue: new Map(),
-      monthlyElectricityValue: new Map(),
+      monthlyGasValue: createInitialData(),
+      monthlyElectricityValue: createInitialData(),
     });
   });
 }
