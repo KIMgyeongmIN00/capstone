@@ -38,6 +38,25 @@ const ResultInteractionSection = () => {
     apartment: selectedApartment,
   });
 
+  // 지역, 도시, 아파트가 모두 선택되어 있는지 확인
+  const isAllSelected = selectedRegion && selectedCity && selectedApartment;
+
+  if (!isAllSelected) {
+    return (
+      <div>
+        <ResultPannel
+          setSelectedRegion={setSelectedRegion}
+          setSelectedCity={setSelectedCity}
+          setSelectedApartment={setSelectedApartment}
+          selectedRegion={selectedRegion}
+          selectedCity={selectedCity}
+          selectedApartment={selectedApartment}
+        />
+        <p className="text-center text-gray-500 mt-4 text-xl font-semibold">지역, 도시, 아파트를 모두 선택해 주세요.</p>
+      </div>
+    );
+  }
+
   if (isLoading)
     return (
       <div className="w-full h-[40dvh] my-4 rounded-lg">
@@ -47,6 +66,7 @@ const ResultInteractionSection = () => {
           setSelectedApartment={setSelectedApartment}
           selectedRegion={selectedRegion}
           selectedCity={selectedCity}
+          selectedApartment={selectedApartment}
         />
         <div className="h-2/3 mx-4 my-2 bg-gray-300 rounded-lg animate-pulse"></div>
       </div>
@@ -60,6 +80,7 @@ const ResultInteractionSection = () => {
           setSelectedApartment={setSelectedApartment}
           selectedRegion={selectedRegion}
           selectedCity={selectedCity}
+          selectedApartment={selectedApartment}
         />
         <p className="text-center text-4xl break-keep">
           차트 불러오기를 실패했습니다. 처음부터 다시 시도 해주세요
@@ -103,6 +124,7 @@ const ResultInteractionSection = () => {
           setSelectedApartment={setSelectedApartment}
           selectedRegion={selectedRegion}
           selectedCity={selectedCity}
+          selectedApartment={selectedApartment}
         />
         <p className="text-center text-gray-500 mt-4">데이터를 불러오는 중...</p>
       </div>
@@ -122,6 +144,7 @@ const ResultInteractionSection = () => {
         setSelectedApartment={setSelectedApartment}
         selectedRegion={selectedRegion}
         selectedCity={selectedCity}
+        selectedApartment={selectedApartment}
       />
       {isFetching && (
         <p className="text-center text-sm text-gray-500 mb-2">
