@@ -2,30 +2,41 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { shallow } from "zustand/shallow";
 
-type MaintenanceValueStore = {
+interface MaintenanceValueStore {
   monthlyGasValue: Map<number, number>;
   monthlyElectricityValue: Map<number, number>;
+  monthlyWaterValue: Map<number, number>;
   initValues: (n: number | null) => void;
   setGasValue: (index: number, value: number) => void;
   setElectricityValue: (index: number, value: number) => void;
+  setWaterValue: (index: number, value: number) => void;
   getGasValueMap: () => [number, number][];
   getElectricityValueMap: () => [number, number][];
-};
+  getWaterValueMap: () => [number, number][];
+}
 
-function mapToArray(map: Map<number, number>) {
-  return Array.from(map.entries());
-}
-function arrayToMap(arr: [number, number][]) {
-  return new Map(arr);
-}
+type MaintenanceValueState = Omit<
+  MaintenanceValueStore,
+  'getGasValueMap' | 'getElectricityValueMap' | 'getWaterValueMap'
+>;
 
 // 초기 데이터 생성
 const createInitialData = () => {
   const map = new Map<number, number>();
-  map.set(0, 11111);
-  map.set(1, 22222);
-  map.set(2, 33333);
+  for (let i = 0; i < 12; i++) {
+    map.set(i, 0);
+  }
   return map;
+};
+
+// Map을 [number, number][] 형태로 변환
+const mapToArray = (map: Map<number, number>): [number, number][] => {
+  return Array.from(map.entries());
+};
+
+// [number, number][]를 Map으로 변환
+const arrayToMap = (arr: [number, number][]): Map<number, number> => {
+  return new Map(arr);
 };
 
 export const userMaintenanceValueStore = create<MaintenanceValueStore>()(
@@ -33,15 +44,16 @@ export const userMaintenanceValueStore = create<MaintenanceValueStore>()(
     (set, get) => ({
       monthlyGasValue: createInitialData(),
       monthlyElectricityValue: createInitialData(),
+      monthlyWaterValue: createInitialData(),
 
       initValues: (n: number | null) => {
-        if (n === null) return;
         const newMap = new Map<number, number>();
-        for (let i = 0; i < n; i++) {
-          newMap.set(i, 0);
+        for (let i = 0; i < 12; i++) {
+          newMap.set(i, n || 0);
         }
         set({ monthlyGasValue: newMap });
         set({ monthlyElectricityValue: newMap });
+        set({ monthlyWaterValue: newMap });
       },
 
       setGasValue: (index, value) => {
@@ -56,34 +68,47 @@ export const userMaintenanceValueStore = create<MaintenanceValueStore>()(
         set({ monthlyElectricityValue: map });
       },
 
-      getGasValueMap: () => {
-        const map = get().monthlyGasValue;
-        return Array.from(map.entries());
+      setWaterValue: (index, value) => {
+        const map = new Map(get().monthlyWaterValue);
+        map.set(index, value);
+        set({ monthlyWaterValue: map });
       },
 
-      getElectricityValueMap: () => {
-        const map = get().monthlyElectricityValue;
-        return Array.from(map.entries());
-      },
+      getGasValueMap: () => mapToArray(get().monthlyGasValue),
+      getElectricityValueMap: () => mapToArray(get().monthlyElectricityValue),
+      getWaterValueMap: () => mapToArray(get().monthlyWaterValue),
 
       shallow,
     }),
     {
-      name: "user-maintenance-value-store",
-      partialize: (state) => ({
-        monthlyGasValue: mapToArray(state.monthlyGasValue),
-        monthlyElectricityValue: mapToArray(state.monthlyElectricityValue),
-      }),
-      merge: (persisted, current) => {
-        const p = persisted as Record<string, unknown>;
-        return {
-          ...current,
-          ...p,
-          monthlyGasValue: arrayToMap((p.monthlyGasValue as [number, number][]) || []),
-          monthlyElectricityValue: arrayToMap((p.monthlyElectricityValue as [number, number][]) || []),
-        };
+      name: "user-maintenance-value-storage",
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          if (!str) return null;
+          const data = JSON.parse(str);
+          return {
+            state: {
+              ...data.state,
+              monthlyGasValue: arrayToMap(data.state.monthlyGasValue || []),
+              monthlyElectricityValue: arrayToMap(data.state.monthlyElectricityValue || []),
+              monthlyWaterValue: arrayToMap(data.state.monthlyWaterValue || []),
+            },
+          };
+        },
+        setItem: (name, value) => {
+          const data = {
+            state: {
+              ...value.state,
+              monthlyGasValue: mapToArray(value.state.monthlyGasValue),
+              monthlyElectricityValue: mapToArray(value.state.monthlyElectricityValue),
+              monthlyWaterValue: mapToArray(value.state.monthlyWaterValue),
+            },
+          };
+          localStorage.setItem(name, JSON.stringify(data));
+        },
+        removeItem: (name) => localStorage.removeItem(name),
       },
-      skipHydration: true,
     }
   )
 );
@@ -94,6 +119,7 @@ if (typeof window !== "undefined") {
     userMaintenanceValueStore.setState({
       monthlyGasValue: createInitialData(),
       monthlyElectricityValue: createInitialData(),
+      monthlyWaterValue: createInitialData(),
     });
   });
 }

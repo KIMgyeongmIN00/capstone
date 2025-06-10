@@ -8,6 +8,11 @@ import { userMaintenanceValueStore } from "@/store/user-maintenance-value-store"
 import ResultsChart from "@/modules/result-interactions-section/components/result-chart";
 import ResultPannel from "./result-pannel";
 import UtilityComparisonTable from "./utility-comparison-table";
+import { useMaintenanceTypeStore } from "@/store/maintenance-type-store";
+import LocationSelecter from "./location-select";
+import CitySelecter from "./city-select";
+import ApartmentSelecter from "./apartment-select";
+import ResultTable from "./result-table";
 
 interface Bill {
   month: string;
@@ -19,6 +24,7 @@ const ResultInteractionSection = () => {
   const [selectedRegion, setSelectedRegion] = useState<string>("서울특별시");
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [selectedApartment, setSelectedApartment] = useState<string>("");
+  const { isElectricityChecked, isGasChecked, isWaterChecked } = useMaintenanceTypeStore();
 
   const gasMapValues = userMaintenanceValueStore(
     (state) => state.monthlyGasValue
@@ -43,15 +49,26 @@ const ResultInteractionSection = () => {
 
   if (!isAllSelected) {
     return (
-      <div>
-        <ResultPannel
-          setSelectedRegion={setSelectedRegion}
-          setSelectedCity={setSelectedCity}
-          setSelectedApartment={setSelectedApartment}
-          selectedRegion={selectedRegion}
-          selectedCity={selectedCity}
-          selectedApartment={selectedApartment}
-        />
+      <div className="flex flex-col">
+        <div className="py-4 text-center">
+          <div className="flex flex-col justify-center gap-y-4">
+            <h2 className="text-2xl">아파트 선택</h2>
+            <div className="flex justify-center gap-6">
+              <div className="flex place-items-center justify-center gap-2">
+                <label className="text-xl">지역별</label>
+                <LocationSelecter setSelectedRegion={setSelectedRegion} />
+              </div>
+              <div className="flex place-items-center justify-center gap-2">
+                <label className="text-xl">도시별</label>
+                <CitySelecter setSelectedCity={setSelectedCity} region={selectedRegion} />
+              </div>
+              <div className="flex place-items-center justify-center gap-2">
+                <label className="text-xl">아파트</label>
+                <ApartmentSelecter setSelectedApartment={setSelectedApartment} region={selectedRegion} district={selectedCity} />
+              </div>
+            </div>
+          </div>
+        </div>
         <p className="text-center text-gray-500 mt-4 text-xl font-semibold">지역, 도시, 아파트를 모두 선택해 주세요.</p>
       </div>
     );
@@ -128,36 +145,66 @@ const ResultInteractionSection = () => {
   const averageGasBills = chartData.map(item => ({ month: item.date, amount: item.gasFee }));
 
   return (
-    <div>
-      <ResultPannel
-        setSelectedRegion={setSelectedRegion}
-        setSelectedCity={setSelectedCity}
-        setSelectedApartment={setSelectedApartment}
-        selectedRegion={selectedRegion}
-        selectedCity={selectedCity}
-        selectedApartment={selectedApartment}
-      />
-      {isFetching && (
-        <p className="text-center text-sm text-gray-500 mb-2">
-          새 데이터를 불러오는 중...
-        </p>
-      )}
-      <div className="mt-8">
-        <h2 className="text-2xl font-bold mb-6 text-center">공과금 비교</h2>
-        <ResultsChart chartData={chartData} />
-        <div className="mt-8">
-          <UtilityComparisonTable
-            title="전기세"
-            userBills={userElectricBills}
-            averageBills={averageElectricBills}
-          />
-          <UtilityComparisonTable
-            title="가스비"
-            userBills={userGasBills}
-            averageBills={averageGasBills}
-          />
+    <div className="flex flex-col">
+      <div className="py-4 text-center">
+        <div className="flex flex-col justify-center gap-y-4">
+          <h2 className="text-2xl">아파트 선택</h2>
+          <div className="flex justify-center gap-6">
+            <div className="flex place-items-center justify-center gap-2">
+              <label className="text-xl">지역별</label>
+              <LocationSelecter setSelectedRegion={setSelectedRegion} />
+            </div>
+            <div className="flex place-items-center justify-center gap-2">
+              <label className="text-xl">도시별</label>
+              <CitySelecter setSelectedCity={setSelectedCity} region={selectedRegion} />
+            </div>
+            <div className="flex place-items-center justify-center gap-2">
+              <label className="text-xl">아파트</label>
+              <ApartmentSelecter setSelectedApartment={setSelectedApartment} region={selectedRegion} district={selectedCity} />
+            </div>
+          </div>
         </div>
       </div>
+
+      {selectedRegion && selectedCity && selectedApartment && (
+        <div className="flex flex-col gap-8 mt-8">
+          {isElectricityChecked && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">전기세 비교</h3>
+              <ResultTable
+                type="electricity"
+                region={selectedRegion}
+                district={selectedCity}
+                apartment={selectedApartment}
+              />
+            </div>
+          )}
+          
+          {isGasChecked && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">가스비 비교</h3>
+              <ResultTable
+                type="gas"
+                region={selectedRegion}
+                district={selectedCity}
+                apartment={selectedApartment}
+              />
+            </div>
+          )}
+
+          {isWaterChecked && (
+            <div>
+              <h3 className="text-xl font-semibold mb-4">수도세 비교</h3>
+              <ResultTable
+                type="water"
+                region={selectedRegion}
+                district={selectedCity}
+                apartment={selectedApartment}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

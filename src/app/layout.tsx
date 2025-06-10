@@ -4,6 +4,7 @@ import TQProvider from "@/providers/tq-provider";
 import "./globals.css";
 import "react-datepicker/dist/react-datepicker.css";
 import TabBar from "@/components/TabBar";
+import StoreProvider from "@/components/providers/store-provider";
 
 const pretendard = localFont({
   src: "../../public/fonts/pretendard-variable.woff2",
@@ -40,8 +41,10 @@ export default function RootLayout({
     <html lang="ko-KR">
       <body className={`${pretendard.variable} antialiased`}>
         <TQProvider>
-          <TabBar />
-          {children}
+          <StoreProvider>
+            <TabBar />
+            {children}
+          </StoreProvider>
         </TQProvider>
       </body>
     </html>
