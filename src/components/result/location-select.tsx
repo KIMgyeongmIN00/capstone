@@ -13,6 +13,8 @@ const LocationSelecter = ({ setSelectedRegion }: LocationSelecterProps) => {
         onChange={(e) => setSelectedRegion(e.target.value)}
       >
         <option value="서울특별시">서울특별시</option>
+        <option value="광주광역시">광주광역시</option>
+        <option value="경기도">경기도</option>
       </select>
     </div>
   );

@@ -87,7 +87,7 @@ const ResultPannel = ({
           </div>
         )}
         <span className="text-sm text-gray-400 text-center">
-          프로토타입 버전에서는 서울특별시만 지원합니다.
+          프로토타입 버전에서는 서울특별시, 광주광역시, 경기도를 지원합니다.
         </span>
       </div>
     </div>
