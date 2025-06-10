@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const tabs = [
   { name: "홈", href: "/" },
   { name: "결과", href: "/results" },
+  { name: "타세대 비교", href: "/compare" }
 ];
 
 export default function TabBar() {
