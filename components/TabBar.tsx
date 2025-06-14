@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { useState, useEffect } from "react"
+import { Menu, X } from "lucide-react"
 
 const navigationItems = [
   { name: "홈", href: "/", type: "route" },
@@ -12,59 +12,59 @@ const navigationItems = [
   { name: "타세대 비교", href: "/compare-peer", type: "route" },
   { name: "절약 팁", href: "#tips", type: "scroll" },
   { name: "결과", href: "/results", type: "route" },
-];
+]
 
 export default function Navigation() {
-  const pathname = usePathname();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const pathname = usePathname()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("")
 
   // 스크롤 위치에 따른 활성 섹션 감지
   useEffect(() => {
-    if (pathname !== "/") return;
+    if (pathname !== "/") return
 
     const handleScroll = () => {
-      const sections = ["features", "tips"];
-      const scrollPosition = window.scrollY + 100;
+      const sections = ["features", "tips"]
+      const scrollPosition = window.scrollY + 100
 
       for (const section of sections) {
-        const element = document.getElementById(section);
+        const element = document.getElementById(section)
         if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetHeight = element.offsetHeight;
+          const offsetTop = element.offsetTop
+          const offsetHeight = element.offsetHeight
 
           if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(`#${section}`);
-            break;
+            setActiveSection(`#${section}`)
+            break
           }
         }
       }
-    };
+    }
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [pathname]);
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [pathname])
 
   const handleScrollTo = (href: string) => {
     if (pathname !== "/") {
-      window.location.href = `/${href}`;
-      return;
+      window.location.href = `/${href}`
+      return
     }
 
-    const targetId = href.substring(1);
-    const element = document.getElementById(targetId);
+    const targetId = href.substring(1)
+    const element = document.getElementById(targetId)
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth" })
     }
-    setIsMenuOpen(false);
-  };
+    setIsMenuOpen(false)
+  }
 
   const isActive = (href: string, type: string) => {
     if (type === "route") {
-      return pathname === href;
+      return pathname === href
     }
-    return activeSection === href;
-  };
+    return activeSection === href
+  }
 
   return (
     <nav className="w-full bg-[#FFF7F2] border-b border-orange-100 sticky top-0 z-50 shadow-sm">
@@ -154,5 +154,5 @@ export default function Navigation() {
         </div>
       )}
     </nav>
-  );
+  )
 } 

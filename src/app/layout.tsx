@@ -1,12 +1,13 @@
+import type React from "react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import TQProvider from "@/providers/tq-provider";
 import "./globals.css";
 import "react-datepicker/dist/react-datepicker.css";
-import TabBar from "@/components/TabBar";
+import Navigation from "@/components/TabBar";
 
 const pretendard = localFont({
-  src: "../../public/fonts/pretendard-variable.woff2",
+  src: "./fonts/pretendard-variable.woff2",
   display: "swap",
   weight: "45 920",
   variable: "--font-pretendard",
@@ -29,6 +30,7 @@ export const metadata: Metadata = {
     // ],
     type: "website",
   },
+  generator: 'v0.dev'
 };
 
 export default function RootLayout({
@@ -40,7 +42,7 @@ export default function RootLayout({
     <html lang="ko-KR">
       <body className={`${pretendard.variable} antialiased`}>
         <TQProvider>
-          <TabBar />
+          <Navigation />
           {children}
         </TQProvider>
       </body>
